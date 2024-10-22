@@ -1,5 +1,5 @@
 <h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="MinecraftSCtoTC_0"></a>MinecraftSCtoTC</h1>
-<p class="has-line-data" data-line-start="2" data-line-end="5">主要使用 <a href="https://github.com/jamebal/jmal-cloud-view/blob/master/LICENSE">opencc</a> 翻譯簡體到繁體<br>
+<p class="has-line-data" data-line-start="2" data-line-end="5">主要使用 <a href="https://github.com/jamebal/jmal-cloud-view/blob/master/LICENSE">opencc</a> 轉換簡體到繁體<br>
 針對資料夾或檔案(.json or .md or .gui)或jar檔搜尋轉換 如果檔名為zh_cn則改為zh_tw<br>
 請注意並不包含遊戲內專有名詞(如下界、終界等)翻譯僅為簡轉繁</p>
 <h2 class="code-line" data-line-start=6 data-line-end=7 ><a id="Features_6"></a>Features</h2>
