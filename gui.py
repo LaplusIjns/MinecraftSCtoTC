@@ -16,7 +16,7 @@ class MCTranslatorGUI(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.title('Minecraft 簡中轉繁體翻譯 ver.2024.10.22')
+        self.title('Minecraft 簡中轉繁體翻譯 ver.2024.10.23')
         self.geometry('900x600')
         self.style = Style(theme="lumen")
         self.configure(bg='lightgray')
@@ -107,6 +107,13 @@ class MCTranslatorGUI(tk.Tk):
             self.directory_label3.config(text=self.trans_dict_path)
     
     def _execute_translate(self):
+        if self.dist_path is None or self.dist_path == '':
+            self._Messagebox(False)
+            return
+        if self.src_path is None or self.src_path ==  '':
+            self._Messagebox(False)
+            return
+
         msctc = MinecraftSCtoTC(
             dist_path = self.dist_path,
             trans_dict_file = self.trans_dict_path
