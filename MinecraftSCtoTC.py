@@ -440,21 +440,22 @@ class MinecraftSCtoTC():
         except Exception as e:
             logging.warning(f'dis_path 路徑設定失敗: 絕對路徑: {os.path.abspath(value)} Exception: {e}')
         logging.debug(f'重新設定 dist_path: {os.path.abspath(self.dist_path)}')
-    def common_parse_interface(self,src_path=str):
+    def common_parse_interface(self,src_path=str) -> bool:
         logging.info(f'common_parse_interface 輸入路徑 {src_path}')
         logging.info(f'common_parse_interface 輸入路徑資料夾 {os.path.isdir(src_path)}')
         logging.info(f'common_parse_interface 輸入路徑檔案 {os.path.isfile(src_path)}')
         if(os.path.isdir(src_path)):
             self.parse_dirt(src_path=src_path,folder_path=src_path)
-            pass
+            return True
         elif(os.path.isfile(src_path)  and src_path.endswith('jar') ):
             self.parse_jar(src_path=src_path)
-            pass
+            return True
         elif(os.path.isfile(src_path)):
             self.parse_file_to_path(file_path=src_path)
-            pass
+            return True
         else:
             logging.info(f'路徑不明不可翻譯 {src_path}')
+            return False
     def _replace_text_by_list(self,text):
         for dict_word in self.trans_dict_list:
             for key, value in dict_word.items():
