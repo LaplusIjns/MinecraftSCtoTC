@@ -192,6 +192,7 @@ class MinecraftSCtoTC():
         try:
             files = os.listdir(folder_path)
             pattern = re.compile(r'.*\.(json|md|gui)$', re.IGNORECASE)
+            pattern2 = re.compile(r'.*\.(jar)$', re.IGNORECASE)
             logging.debug("資料夾中的檔案:")
             for file in files:
                 abs_file_path_name = folder_path+"\\"+file
@@ -209,6 +210,14 @@ class MinecraftSCtoTC():
                     elif pattern.match(file):
                         queue_datas.append({
                             "action":"2",
+                            "dist_path":self.dist_path,
+                            "src_path":src_path,
+                            "file":file,
+                            "abs_file_path_name":abs_file_path_name
+                        })
+                    elif pattern2.match(file):
+                        queue_datas.append({
+                            "action":"4",
                             "dist_path":self.dist_path,
                             "src_path":src_path,
                             "file":file,
@@ -243,23 +252,25 @@ class MinecraftSCtoTC():
         開啟特定jar並把zh_cn 轉為 zh_tw
         """
         if not os.path.exists(src_path):
-            logging.warning(f"open_jar 文件不存在: {src_path}")
+            logging.warning(f"parse_jar 文件不存在: {src_path}")
             return
         try:
+            _find = False
             with zipfile.ZipFile(src_path, 'r') as jar:
                 files = jar.namelist()
                 for file_name in files:
                 # print(file_name)
                     if fnmatch.fnmatch(file_name, 'assets/*/lang/zh_cn.json'):
+                        _find = True
                         with jar.open(file_name) as file:
                             content = file.read()
                             content = content.decode('utf-8')
                         content = self._select_translate_type(content)
-                        logging.info(f'{os.path.abspath(self.dist_path+"\\"+os.path.normpath(file_name))}')
-                        self._save_file(os.path.abspath(self.dist_path+"\\"+os.path.normpath(file_name)),content)
-
+                        self._save_file(os.path.abspath(self.dist_path+"\\"+os.path.normpath(file_name).replace("zh_cn","zh_tw")),content)
+            if _find is False:
+                logging.info(f'jar檔 {src_path} 無 zh_cn.json')
         except Exception as e:
-            logging.error(f'open_jar {src_path} generated an exception: {e}')
+            logging.error(f'parse_jar {src_path} generated an exception: {e}')
     def _process_queue_data(self,queue_datas)->None:
         # threads = []
         # for queue_data in queue_datas:
@@ -294,6 +305,10 @@ class MinecraftSCtoTC():
             self._action2_other_json(dist_path, src_path, file, abs_file_path_name)
         elif action == '3':
             self._action3_transfer_file(dist_path, src_path, file, abs_file_path_name)
+        elif action == '4':
+            self._action4_transfer_file(dist_path, src_path, file, abs_file_path_name)
+    def _action4_transfer_file(self,dist_path, src_path, file, abs_file_path_name)->None:
+        self.parse_jar(abs_file_path_name)
     def _action3_transfer_file(self,dist_path, src_path, file, abs_file_path_name)->None:
         logging.info(f"需要複製移動的檔案 {abs_file_path_name}")
         if not os.path.exists((dist_path+"\\"+ self._relate_path(abs_file_path_name,src_path))):
